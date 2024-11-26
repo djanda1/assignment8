@@ -12,13 +12,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.time.LocalDateTime;
 import java.util.*;
-import Encryption.EncryptionHelper;
-import Encryption.EncryptionUtils;
 
 import java.io.*;
 
 public class UserManagementApp extends Application {
-	private EncryptionHelper encryptionHelper;
 	private Map<String, User> users = new HashMap<>();
 	private Map<String, Articles> articles = new HashMap<>();
 	private User currentUser;
@@ -30,13 +27,6 @@ public class UserManagementApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		try {
-			encryptionHelper = new EncryptionHelper();
-		}
-		catch(Exception e)
-		{
-			showAlert("Error", "Could not load encryption");
-		}
 		primaryStage.setTitle("User Management Application");
 		showLoginPage(primaryStage);
 	}
@@ -1229,9 +1219,7 @@ public class UserManagementApp extends Application {
 			try {
 			if(!t.equals("") && !a.equals("") && !b.equals("") && !k.equals("") && !d.equals("") && !r.equals("") && !g.equals(""))		//if textfields are filled out
 			{
-				String encryptedBody = Base64.getEncoder().encodeToString(
-						encryptionHelper.encrypt(b.getBytes(), EncryptionUtils.getInitializationVector(t.toCharArray())));
-				Articles newArticle = new Articles(t, d, k, a, encryptedBody, r, g, l, isSpecial);
+				Articles newArticle = new Articles(t, d, k, a, b, r, g, l, isSpecial);
 				newArticle.addAllowedUser(currentUser.getUsername());
 				if(articles.get(t) == null)			//if article is unique then add it to system else show error
 				{
